@@ -8,7 +8,7 @@ struct TodoController {
       .query(on: req.db)
       .with(\.$group)
       .join(Group.self, on: \Todo.$group.$id == \Group.$id)
-      .paginate(for: req).map { $0.map { $0.mapList() } }
+      .paginate(for: req).map { $0.mapToPublic() }
   }
 
   func create(req: Request) throws -> EventLoopFuture<TodoGetObject> {

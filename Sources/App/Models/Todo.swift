@@ -1,14 +1,20 @@
 import Fluent
 import Vapor
 
-struct TodoListObject: Codable {
-  let id: UUID
+struct TodoListObject: Content {
+  let id: UUID?
 
   let title: String
-  let group: String
+  let group: Group
 
   var subtitle: String {
     return "\(title) in \(group)"
+  }
+
+  init(with domainObject: Todo) {
+    self.title = domainObject.title
+    self.group = domainObject.group
+    self.id = domainObject.id
   }
 }
 
@@ -56,16 +62,12 @@ final class Todo: Model {
   }
 }
 
-extension Todo {
-  func mapList() -> TodoListObject {
-    .init(
-      id: id!,
-      title: title,
-      group: group.title
-    )
-  }
-
+extension Todo: ResponseConvertible {
   func mapGet() -> TodoGetObject {
     .init(id: id!)
+  }
+
+  var mapToPublic: TodoListObject {
+    return .init(with: self)
   }
 }
