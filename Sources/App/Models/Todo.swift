@@ -10,16 +10,18 @@ struct TodoListObject: Content {
   let id: UUID?
 
   let title: String
-  let group: Group
-
-  var subtitle: String {
-    return "\(title) in \(group)"
-  }
+  let group: String
+  let subtitle: String
 
   init(with domainObject: Todo) {
-    self.title = domainObject.title
-    self.group = domainObject.group
     self.id = domainObject.id
+    self.title = domainObject.title
+    
+    // Nested property example
+    self.group = domainObject.group.title
+    
+    // Computed property example
+    self.subtitle = "\(domainObject.title) in \(domainObject.group.title)"
   }
 }
 
