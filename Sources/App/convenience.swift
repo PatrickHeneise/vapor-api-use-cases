@@ -1,12 +1,13 @@
 import Vapor
 
-protocol ResponseConvertible {
+protocol ApiModel {
   associatedtype Response: Content
-  var mapToPublic: Response { get }
+  
+  var toPublic: Response { get }
 }
 
-extension Array where Element: ResponseConvertible {
+extension Array where Element: ApiModel {
   var mapToPublic: [Element.Response] {
-    map { $0.mapToPublic }
+    map { $0.toPublic }
   }
 }

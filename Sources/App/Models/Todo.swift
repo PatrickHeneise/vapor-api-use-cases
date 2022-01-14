@@ -1,6 +1,11 @@
 import Fluent
 import Vapor
 
+struct TodoGetObject: Content {
+  let id: UUID
+  let title:String
+}
+
 struct TodoListObject: Content {
   let id: UUID?
 
@@ -16,10 +21,6 @@ struct TodoListObject: Content {
     self.group = domainObject.group
     self.id = domainObject.id
   }
-}
-
-struct TodoGetObject: Content {
-  let id: UUID
 }
 
 final class Todo: Model {
@@ -62,12 +63,14 @@ final class Todo: Model {
   }
 }
 
-extension Todo: ResponseConvertible {
-  func mapGet() -> TodoGetObject {
-    .init(id: id!)
-  }
-
-  var mapToPublic: TodoListObject {
+extension Todo: ApiModel {
+  var toPublic: TodoListObject {
     return .init(with: self)
+  }
+}
+
+extension Todo {
+  func mapGet() -> TodoGetObject {
+    .init(id: id!, title: title)
   }
 }
